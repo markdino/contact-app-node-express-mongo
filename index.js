@@ -1,5 +1,7 @@
 const express = require("express");
 const app = express();
+const bodyParser = require("body-parser");
+const urlencodedParser = bodyParser.urlencoded({ extended: false });
 const jsonData = require("./data.json");
 
 app.set("view engine", "ejs");
@@ -43,6 +45,21 @@ app.get("/contact/create", (req, res) => {
     }
   });
   res.render("create", { id });
+});
+
+app.post("/contact/save", urlencodedParser, (req, res) => {
+  let { id, avatar, name, mobile, tel, email, address } = req.body;
+  let newContact = {
+    id: Number(id),
+    avatar,
+    name,
+    mobile,
+    tel,
+    email,
+    address
+  };
+  data.push(newContact);
+  res.redirect("/");
 });
 
 app.listen(3000, () => {
