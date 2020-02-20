@@ -22,6 +22,11 @@ app.get("/", (req, res) => {
   res.render("index", { data });
 });
 
+app.get("/contact/:id/view", (req, res) => {
+  const newData = data.find(person => person.id === Number(req.params.id));
+  res.render("view", { person: newData });
+});
+
 app.listen(3000, () => {
   console.log("Listening on Port 3000...");
 });
