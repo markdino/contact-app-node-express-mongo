@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact App</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="container p-10">
+      <!-- Contact List -->
+      <section class="contacts py-10">
+        <% data.forEach(person=>{ %>
+        <section id="contact-list" class="row my-10">
+          <section class="avatar-circle">
+            <img
+              src="<%= person.avatar || `user.svg` %>"
+              alt="avatar"
+              class="avatar-img"
+            />
+          </section>
+          <a class="name" href="/contact/<%= person.id %>/view">
+            <%= person.name %>
+          </a>
+          <section>
+            <form action="/contact/<%= person.id %>/delete" method="POST">
+              <button class="delete" title="Delete contact">
+                <svg viewBox="0 0 448 512" class="delete-svg">
+                  <path
+                    d="M32 464a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128H32zm272-256a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zM432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z"
+                  />
+                </svg>
+              </button>
+            </form>
+          </section>
+        </section>
+        <% }) %>
+      </section>
+      <footer></footer>
+    </main>
+  </body>
+</html>
