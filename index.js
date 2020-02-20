@@ -27,6 +27,14 @@ app.get("/contact/:id/view", (req, res) => {
   res.render("view", { person: newData });
 });
 
+app.post("/contact/:id/delete", (req, res) => {
+  data.splice(
+    data.findIndex(person => person.id === Number(req.params.id)),
+    1
+  );
+  res.redirect("/");
+});
+
 app.listen(3000, () => {
   console.log("Listening on Port 3000...");
 });
