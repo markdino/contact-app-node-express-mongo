@@ -4,17 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Contact App</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="/style.css" />
   </head>
   <body>
     <main class="container p-10">
       <!-- Search bar -->
       <nav id="search-nav" class="row p-10">
-        <form action="" id="search-form" class="row">
+        <form
+          action="/contact/search"
+          method="POST"
+          id="search-form"
+          class="row"
+        >
           <section class="search-group row">
             <label for="search-field">Search</label>
             <section id="search-border" class="row">
-              <input type="search" name="search-contact" id="search-field" />
+              <input type="search" name="search" id="search-field" />
               <button type="submit" id="search-btn">
                 <svg viewBox="0 0 512 512" class="search-svg">
                   <path
@@ -44,7 +49,7 @@
         <section id="contact-list" class="row my-10">
           <section class="avatar-circle">
             <img
-              src="<%= person.avatar || `user.svg` %>"
+              src="/<%= person.avatar || `user.svg` %>"
               alt="avatar"
               class="avatar-img"
             />

@@ -62,6 +62,19 @@ app.post("/contact/save", urlencodedParser, (req, res) => {
   res.redirect("/");
 });
 
+app.post("/contact/search", urlencodedParser, (req, res) => {
+  const searched = data.filter(person => {
+    const personLC = person.name.toLowerCase();
+    const searchLC = req.body.search.toLowerCase();
+    return personLC.indexOf(searchLC) === 0 || personLC.indexOf(searchLC) > 0;
+  });
+  if (req.body.search === "") {
+    res.redirect("/");
+  } else {
+    res.render("index", { data: searched });
+  }
+});
+
 app.listen(3000, () => {
   console.log("Listening on Port 3000...");
 });
