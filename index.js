@@ -35,6 +35,16 @@ app.post("/contact/:id/delete", (req, res) => {
   res.redirect("/");
 });
 
+app.get("/contact/create", (req, res) => {
+  let id = 1;
+  data.forEach(person => {
+    if (person.id >= id) {
+      id = person.id + 1;
+    }
+  });
+  res.render("create", { id });
+});
+
 app.listen(3000, () => {
   console.log("Listening on Port 3000...");
 });
