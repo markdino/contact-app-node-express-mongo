@@ -66,7 +66,7 @@ app.post("/contact/search", urlencodedParser, (req, res) => {
   const searched = data.filter(person => {
     const personLC = person.name.toLowerCase();
     const searchLC = req.body.search.toLowerCase();
-    return personLC.indexOf(searchLC) === 0 || personLC.indexOf(searchLC) > 0;
+    return personLC.indexOf(searchLC) >= 0;
   });
   if (req.body.search === "") {
     res.redirect("/");
