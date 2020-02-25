@@ -9,6 +9,7 @@ app.use(express.static("./assets"));
 
 const data = jsonData;
 
+// Home Route
 app.get("/", (req, res) => {
   data.sort(function(a, b) {
     const nameA = a.name.toUpperCase();
@@ -24,11 +25,13 @@ app.get("/", (req, res) => {
   res.render("index", { data });
 });
 
+// Contact View Route
 app.get("/contact/:id/view", (req, res) => {
   const newData = data.find(person => person.id === Number(req.params.id));
   res.render("view", { person: newData });
 });
 
+// Delete Contact Route
 app.post("/contact/:id/delete", (req, res) => {
   data.splice(
     data.findIndex(person => person.id === Number(req.params.id)),
@@ -37,6 +40,7 @@ app.post("/contact/:id/delete", (req, res) => {
   res.redirect("/");
 });
 
+// Create Contact Route
 app.get("/contact/create", (req, res) => {
   let id = 1;
   data.forEach(person => {
@@ -47,6 +51,7 @@ app.get("/contact/create", (req, res) => {
   res.render("create", { id });
 });
 
+// Save Contact Route
 app.post("/contact/save", urlencodedParser, (req, res) => {
   let { id, avatar, name, mobile, tel, email, address } = req.body;
   let newContact = {
@@ -62,6 +67,7 @@ app.post("/contact/save", urlencodedParser, (req, res) => {
   res.redirect("/");
 });
 
+// Search Contact Route
 app.post("/contact/search", urlencodedParser, (req, res) => {
   const searched = data.filter(person => {
     const personLC = person.name.toLowerCase();
@@ -75,6 +81,7 @@ app.post("/contact/search", urlencodedParser, (req, res) => {
   }
 });
 
+// Listen to Port 3000
 app.listen(3000, () => {
   console.log("Listening on Port 3000...");
 });
