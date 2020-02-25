@@ -20,7 +20,7 @@
           </a>
         </section>
 
-        <a onclick="document.querySelector('#avatar').click()">
+        <a onclick="showModal()">
           <section id="add-photo" class="row">
             <svg viewBox="0 0 512 512" class="camera-svg">
               <path
@@ -31,14 +31,33 @@
         </a>
       </section>
       <section class="thumbnail-holder">
-        <img src="/user.svg" alt="profile avatar" />
+        <img src="/user.svg" alt="profile avatar" id="img-avatar" />
       </section>
-
+      <!-- Image Modal -->
+      <section id="img-modal" class="d-none">
+        <section class="row modal-wrapper">
+          <section class="modal-container">
+            <section class="input-group">
+              <label for="img-link">Image link</label>
+              <input
+                type="text"
+                id="img-link"
+                placeholder="https://"
+                required
+              />
+            </section>
+            <section class="buttons">
+              <button onclick="hideModal()">Cancel</button>
+              <button onclick="getImage(hideModal)">Accept</button>
+            </section>
+          </section>
+        </section>
+      </section>
       <!-- Contact Details -->
       <main class="p-10">
         <form action="/contact/save" method="post">
           <input type="text" name="id" value="<%= id %>" class="d-none" />
-          <input type="file" name="avatar" id="avatar" class="d-none" />
+          <input type="text" name="avatar" id="avatar" class="d-none" />
           <section class="input-group">
             <label for="name">Name</label>
             <input type="text" id="name" name="name" required />
@@ -63,5 +82,26 @@
         </form>
       </main>
     </main>
+    <script>
+      const imgModal = document.querySelector("#img-modal");
+      const imgLink = document.querySelector("#img-link");
+      const avatarField = document.querySelector("#avatar");
+      const avatarImg = document.querySelector("#img-avatar");
+
+      function getImage(callback) {
+        if (imgLink.value.length > 0) {
+          avatarField.value = imgLink.value;
+          avatarImg.src = imgLink.value;
+          callback();
+        }
+      }
+      function showModal() {
+        imgModal.classList.remove("d-none");
+        imgLink.focus();
+      }
+      function hideModal() {
+        imgModal.classList = "d-none";
+      }
+    </script>
   </body>
 </html>

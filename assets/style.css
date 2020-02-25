@@ -305,9 +305,33 @@ a {
 }
 
 .input-group input {
-  padding: 5px 10px;
+  padding: 10px;
   border-radius: 5px;
   border: 1px solid #ced4da;
   width: auto;
-  font-size: 1.2rem;
+}
+
+/* Modal */
+#img-modal {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.7);
+  top: 0;
+  width: 100%;
+  max-width: 500px;
+  height: 100vh;
+  z-index: 1;
+}
+
+.modal-wrapper {
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+}
+
+.modal-container {
+  padding: 30px 20px;
+  border-radius: 5px;
+  width: 80%;
+  max-width: 300px;
+  background-color: #fff;
 }
