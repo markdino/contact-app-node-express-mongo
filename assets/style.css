@@ -205,6 +205,10 @@ a {
   justify-content: center;
 }
 
+#add-photo:hover {
+  background: #000;
+}
+
 .camera-svg {
   width: 30px;
   fill: #fff;
