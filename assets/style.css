@@ -339,3 +339,16 @@ a {
   max-width: 300px;
   background-color: #fff;
 }
+
+.modal-container .buttons button {
+  width: 100%;
+  margin: 2px;
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: 1px solid #a7a9ac;
+  background-color: transparent;
+  cursor: pointer;
+}
+.modal-container .buttons button:hover {
+  background-color: #dee2e6;
+}
