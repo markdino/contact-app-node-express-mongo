@@ -67,6 +67,28 @@ app.post("/contact/save", urlencodedParser, (req, res) => {
   res.redirect("/");
 });
 
+// Edit Contact Route
+app.get("/contact/:id/edit", (req, res) => {
+  const newData = data.find(person => person.id === Number(req.params.id));
+  res.render("update", { person: newData });
+});
+
+// Update Contact Route
+app.post("/contact/update", urlencodedParser, (req, res) => {
+  let { id, avatar, name, mobile, tel, email, address } = req.body;
+  let newContact = {
+    id: Number(id),
+    avatar,
+    name,
+    mobile,
+    tel,
+    email,
+    address
+  };
+  data[data.findIndex(person => person.id === newContact.id)] = newContact;
+  res.redirect("/");
+});
+
 // Search Contact Route
 app.post("/contact/search", urlencodedParser, (req, res) => {
   const searched = data.filter(person => {
