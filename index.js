@@ -3,6 +3,23 @@ const app = express();
 const bodyParser = require("body-parser");
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 const jsonData = require("./data.json");
+const mongoose = require("mongoose");
+
+mongoose.connect("mongodb://localhost/contact", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+
+const personSchema = new mongoose.Schema({
+  avatar: String,
+  name: String,
+  mobile: String,
+  tel: String,
+  email: String,
+  address: String
+});
+
+const Contact = mongoose.model("contact", personSchema);
 
 app.set("view engine", "ejs");
 app.use(express.static("./assets"));
