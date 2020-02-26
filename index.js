@@ -60,11 +60,10 @@ app.get("/contact/:id/view", (req, res) => {
 
 // Delete Contact Route
 app.post("/contact/:id/delete", (req, res) => {
-  data.splice(
-    data.findIndex(person => person.id === Number(req.params.id)),
-    1
-  );
-  res.redirect("/");
+  Contact.deleteOne({ _id: req.params.id }, (err, response) => {
+    if (err) console.log(err);
+    res.redirect("/");
+  });
 });
 
 // Create Contact Route
