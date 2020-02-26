@@ -48,8 +48,14 @@ app.get("/", (req, res) => {
 
 // Contact View Route
 app.get("/contact/:id/view", (req, res) => {
-  const newData = data.find(person => person.id === Number(req.params.id));
-  res.render("view", { person: newData });
+  Contact.findOne({ _id: req.params.id }, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.redirect("/");
+    } else {
+      res.render("view", { person: result });
+    }
+  });
 });
 
 // Delete Contact Route
