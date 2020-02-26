@@ -90,7 +90,7 @@ app.get("/contact/:id/edit", (req, res) => {
 
 // Update Contact Route
 app.post("/contact/:id/update", urlencodedParser, (req, res) => {
-  Contact.update(
+  Contact.updateOne(
     { _id: req.params.id },
     { $set: req.body },
     (err, response) => {
