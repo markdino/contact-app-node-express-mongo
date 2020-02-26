@@ -68,29 +68,15 @@ app.post("/contact/:id/delete", (req, res) => {
 
 // Create Contact Route
 app.get("/contact/create", (req, res) => {
-  let id = 1;
-  data.forEach(person => {
-    if (person.id >= id) {
-      id = person.id + 1;
-    }
-  });
-  res.render("create", { id });
+  res.render("create");
 });
 
 // Save Contact Route
 app.post("/contact/save", urlencodedParser, (req, res) => {
-  let { id, avatar, name, mobile, tel, email, address } = req.body;
-  let newContact = {
-    id: Number(id),
-    avatar,
-    name,
-    mobile,
-    tel,
-    email,
-    address
-  };
-  data.push(newContact);
-  res.redirect("/");
+  Contact.create(req.body, (err, response) => {
+    if (err) throw err;
+    res.redirect("/");
+  });
 });
 
 // Edit Contact Route
