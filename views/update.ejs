@@ -59,13 +59,7 @@
       </section>
       <!-- Contact Details -->
       <main class="p-10">
-        <form action="/contact/update" method="post">
-          <input
-            type="text"
-            name="id"
-            value="<%= person.id %>"
-            class="d-none"
-          />
+        <form action="/contact/<%= person._id %>/update" method="post">
           <input
             type="text"
             name="avatar"

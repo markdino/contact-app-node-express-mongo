@@ -81,24 +81,25 @@ app.post("/contact/save", urlencodedParser, (req, res) => {
 
 // Edit Contact Route
 app.get("/contact/:id/edit", (req, res) => {
-  const newData = data.find(person => person.id === Number(req.params.id));
-  res.render("update", { person: newData });
+  Contact.findOne({ _id: req.params.id }, (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.render("update", { person: result });
+    }
+  });
 });
 
 // Update Contact Route
-app.post("/contact/update", urlencodedParser, (req, res) => {
-  let { id, avatar, name, mobile, tel, email, address } = req.body;
-  let newContact = {
-    id: Number(id),
-    avatar,
-    name,
-    mobile,
-    tel,
-    email,
-    address
-  };
-  data[data.findIndex(person => person.id === newContact.id)] = newContact;
-  res.redirect("/");
+app.post("/contact/:id/update", urlencodedParser, (req, res) => {
+  Contact.update(
+    { _id: req.params.id },
+    { $set: req.body },
+    (err, response) => {
+      if (err) throw err;
+      res.redirect("/");
+    }
+  );
 });
 
 // Search Contact Route
