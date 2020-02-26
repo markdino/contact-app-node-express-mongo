@@ -24,8 +24,6 @@ const Contact = mongoose.model("contact", personSchema);
 app.set("view engine", "ejs");
 app.use(express.static("./assets"));
 
-const data = jsonData;
-
 // Home Route
 app.get("/", (req, res) => {
   Contact.find({}, (err, result) => {
