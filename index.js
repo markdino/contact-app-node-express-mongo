@@ -104,16 +104,22 @@ app.post("/contact/:id/update", urlencodedParser, (req, res) => {
 
 // Search Contact Route
 app.post("/contact/search", urlencodedParser, (req, res) => {
-  const searched = data.filter(person => {
-    const personLC = person.name.toLowerCase();
-    const searchLC = req.body.search.toLowerCase();
-    return personLC.indexOf(searchLC) >= 0;
+  Contact.find({}, (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      const searched = result.filter(person => {
+        const personLC = person.name.toLowerCase();
+        const searchLC = req.body.search.toLowerCase();
+        return personLC.indexOf(searchLC) >= 0;
+      });
+      if (req.body.search === "") {
+        res.redirect("/");
+      } else {
+        res.render("index", { data: searched });
+      }
+    }
   });
-  if (req.body.search === "") {
-    res.redirect("/");
-  } else {
-    res.render("index", { data: searched });
-  }
 });
 
 // Listen to Port 3000
