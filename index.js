@@ -28,18 +28,22 @@ const data = jsonData;
 
 // Home Route
 app.get("/", (req, res) => {
-  data.sort(function(a, b) {
-    const nameA = a.name.toUpperCase();
-    const nameB = b.name.toUpperCase();
-    if (nameA < nameB) {
-      return -1;
+  Contact.find({}, (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      // If mongodb is empty create new data coming from JSON file (data.json)
+      if (result.length <= 0) {
+        Contact.create(jsonData, (err, result) => {
+          if (err) throw err;
+          res.render("index", { data: result });
+        });
+        // If mongodb has a data then get the data then render
+      } else {
+        res.render("index", { data: result });
+      }
     }
-    if (nameA > nameB) {
-      return 1;
-    }
-    return 0;
-  });
-  res.render("index", { data });
+  }).sort({ name: 1 });
 });
 
 // Contact View Route

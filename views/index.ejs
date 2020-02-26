@@ -54,11 +54,11 @@
               class="avatar-img"
             />
           </section>
-          <a class="name" href="/contact/<%= person.id %>/view">
+          <a class="name" href="/contact/<%= person._id %>/view">
             <%= person.name %>
           </a>
           <section>
-            <form action="/contact/<%= person.id %>/delete" method="POST">
+            <form action="/contact/<%= person._id %>/delete" method="POST">
               <button class="delete" title="Delete contact">
                 <svg viewBox="0 0 448 512" class="delete-svg">
                   <path
