@@ -7,7 +7,7 @@ mongoose.connect("mongodb://localhost/contact", {
 
 const personSchema = new mongoose.Schema({
   avatar: String,
-  name: String,
+  name: { type: String, require: [true, "Name field is reuired"] },
   mobile: String,
   tel: String,
   email: String,
