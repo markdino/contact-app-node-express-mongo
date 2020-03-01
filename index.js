@@ -58,13 +58,9 @@ app.post("/contact/save", urlencodedParser, (req, res) => {
 
 // Edit Contact Route
 app.get("/contact/:id/edit", (req, res) => {
-  Contact.findOne({ _id: req.params.id }, (err, result) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.render("update", { person: result });
-    }
-  });
+  Contact.findOne({ _id: req.params.id })
+    .then(result => res.render("update", { person: result }))
+    .catch(err => console.log(err));
 });
 
 // Update Contact Route
