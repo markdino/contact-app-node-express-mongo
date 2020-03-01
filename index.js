@@ -65,14 +65,9 @@ app.get("/contact/:id/edit", (req, res) => {
 
 // Update Contact Route
 app.post("/contact/:id/update", urlencodedParser, (req, res) => {
-  Contact.updateOne(
-    { _id: req.params.id },
-    { $set: req.body },
-    (err, response) => {
-      if (err) throw err;
-      res.redirect("/");
-    }
-  );
+  Contact.updateOne({ _id: req.params.id }, { $set: req.body })
+    .then(() => res.redirect("/"))
+    .catch(err => console.log(err));
 });
 
 // Search Contact Route
