@@ -39,10 +39,9 @@ app.get("/contact/:id/view", (req, res) => {
 
 // Delete Contact Route
 app.post("/contact/:id/delete", (req, res) => {
-  Contact.deleteOne({ _id: req.params.id }, (err, response) => {
-    if (err) console.log(err);
-    res.redirect("/");
-  });
+  Contact.deleteOne({ _id: req.params.id })
+    .then(() => res.redirect("/"))
+    .catch(err => console.log(err));
 });
 
 // Create Contact Route
