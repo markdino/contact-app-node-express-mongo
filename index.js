@@ -33,7 +33,9 @@ app.get("/contact/:id/view", (req, res) => {
     .then(result => res.render("view", { person: result }))
     .catch(err => {
       console.log(err);
-      res.redirect("/");
+      res.status(400).render("error", {
+        Error: { code: 400, status: err.name, message: err.message }
+      });
     });
 });
 
@@ -60,7 +62,12 @@ app.post("/contact/save", urlencodedParser, (req, res) => {
 app.get("/contact/:id/edit", (req, res) => {
   Contact.findOne({ _id: req.params.id })
     .then(result => res.render("update", { person: result }))
-    .catch(err => console.log(err));
+    .catch(err => {
+      console.log(err);
+      res.status(400).render("error", {
+        Error: { code: 400, status: err.name, message: err.message }
+      });
+    });
 });
 
 // Update Contact Route
@@ -87,6 +94,13 @@ app.post("/contact/search", urlencodedParser, (req, res) => {
       }
     })
     .catch(err => console.log(err));
+});
+
+// 404 Page Not Found Route
+app.get("*", (req, res) => {
+  res.status(404).render("error", {
+    Error: { code: 404, status: "Not Found", message: "Page Not Found!" }
+  });
 });
 
 // Listen to Port 3000
