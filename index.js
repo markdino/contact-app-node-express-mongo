@@ -72,22 +72,21 @@ app.post("/contact/:id/update", urlencodedParser, (req, res) => {
 
 // Search Contact Route
 app.post("/contact/search", urlencodedParser, (req, res) => {
-  Contact.find({}, (err, result) => {
-    if (err) {
-      console.log(err);
-    } else {
+  Contact.find()
+    .select("name avatar")
+    .then(result => {
       const searched = result.filter(person => {
         const personLC = person.name.toLowerCase();
         const searchLC = req.body.search.toLowerCase();
-        return personLC.indexOf(searchLC) >= 0;
+        return personLC.includes(searchLC);
       });
       if (req.body.search === "") {
         res.redirect("/");
       } else {
         res.render("index", { data: searched });
       }
-    }
-  });
+    })
+    .catch(err => console.log(err));
 });
 
 // Listen to Port 3000
