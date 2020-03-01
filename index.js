@@ -29,14 +29,12 @@ app.get("/", (req, res) => {
 
 // Contact View Route
 app.get("/contact/:id/view", (req, res) => {
-  Contact.findOne({ _id: req.params.id }, (err, result) => {
-    if (err) {
+  Contact.findOne({ _id: req.params.id })
+    .then(result => res.render("view", { person: result }))
+    .catch(err => {
       console.log(err);
       res.redirect("/");
-    } else {
-      res.render("view", { person: result });
-    }
-  });
+    });
 });
 
 // Delete Contact Route
