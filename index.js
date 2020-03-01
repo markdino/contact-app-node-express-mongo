@@ -10,22 +10,21 @@ app.use(express.static("./assets"));
 
 // Home Route
 app.get("/", (req, res) => {
-  Contact.find({}, (err, result) => {
-    if (err) {
-      console.log(err);
-    } else {
+  Contact.find({})
+    .sort({ name: 1 })
+    .select("name avatar")
+    .then(result => {
       // If mongodb is empty create new data coming from JSON file (data.json)
       if (result.length <= 0) {
-        Contact.create(jsonData, (err, result) => {
-          if (err) throw err;
-          res.render("index", { data: result });
-        });
+        Contact.create(jsonData)
+          .then(() => res.redirect("/"))
+          .catch(err => console.log(err));
         // If mongodb has a data then get the data then render
       } else {
         res.render("index", { data: result });
       }
-    }
-  }).sort({ name: 1 });
+    })
+    .catch(err => console.log(err));
 });
 
 // Contact View Route
