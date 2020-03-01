@@ -51,10 +51,9 @@ app.get("/contact/create", (req, res) => {
 
 // Save Contact Route
 app.post("/contact/save", urlencodedParser, (req, res) => {
-  Contact.create(req.body, (err, response) => {
-    if (err) throw err;
-    res.redirect("/");
-  });
+  Contact.create(req.body)
+    .then(() => res.redirect("/"))
+    .catch(err => console.log(err));
 });
 
 // Edit Contact Route
