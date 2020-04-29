@@ -24,17 +24,38 @@ app.get("/", (req, res) => {
         res.render("index", { data: result });
       }
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      res.status(400).render("error", {
+        Error: {
+          code: 400,
+          status: err.name,
+          message: err.message
+        }
+      });
+    });
 });
 
 // Contact View Route
 app.get("/contact/:id/view", (req, res) => {
   Contact.findOne({ _id: req.params.id })
-    .then(result => res.render("view", { person: result }))
+    .then(result => {
+      result
+        ? res.render("view", { person: result })
+        : res.status(404).render("error", {
+            Error: {
+              code: 404,
+              status: "Not Found",
+              message: "Contact not found or invalid id."
+            }
+          });
+    })
     .catch(err => {
-      console.log(err);
       res.status(400).render("error", {
-        Error: { code: 400, status: err.name, message: err.message }
+        Error: {
+          code: 400,
+          status: "Bad request",
+          message: `${err.name}. "${err.value}" is invalid.`
+        }
       });
     });
 });
@@ -42,8 +63,26 @@ app.get("/contact/:id/view", (req, res) => {
 // Delete Contact Route
 app.post("/contact/:id/delete", (req, res) => {
   Contact.deleteOne({ _id: req.params.id })
-    .then(() => res.redirect("/"))
-    .catch(err => console.log(err));
+    .then(response => {
+      response.deletedCount > 0
+        ? res.redirect("/")
+        : res.status(400).render("error", {
+            Error: {
+              code: 404,
+              status: "Not Found",
+              message: "Contact already been deleted."
+            }
+          });
+    })
+    .catch(err => {
+      res.status(400).render("error", {
+        Error: {
+          code: 400,
+          status: "Bad request",
+          message: `${err.name}. "${err.value}" is invalid.`
+        }
+      });
+    });
 });
 
 // Create Contact Route
@@ -55,17 +94,34 @@ app.get("/contact/create", (req, res) => {
 app.post("/contact/save", urlencodedParser, (req, res) => {
   Contact.create(req.body)
     .then(() => res.redirect("/"))
-    .catch(err => console.log(err));
+    .catch(err => {
+      res.status(400).render("error", {
+        Error: { code: 400, status: err.name, message: err.message }
+      });
+    });
 });
 
 // Edit Contact Route
 app.get("/contact/:id/edit", (req, res) => {
   Contact.findOne({ _id: req.params.id })
-    .then(result => res.render("update", { person: result }))
+    .then(result => {
+      result
+        ? res.render("update", { person: result })
+        : res.status(404).render("error", {
+            Error: {
+              code: 404,
+              status: "Not Found",
+              message: "Contact not found."
+            }
+          });
+    })
     .catch(err => {
-      console.log(err);
       res.status(400).render("error", {
-        Error: { code: 400, status: err.name, message: err.message }
+        Error: {
+          code: 400,
+          status: "Bad request",
+          message: `${err.name}. "${err.value}" is invalid.`
+        }
       });
     });
 });
@@ -73,8 +129,26 @@ app.get("/contact/:id/edit", (req, res) => {
 // Update Contact Route
 app.post("/contact/:id/update", urlencodedParser, (req, res) => {
   Contact.updateOne({ _id: req.params.id }, { $set: req.body })
-    .then(() => res.redirect("/"))
-    .catch(err => console.log(err));
+    .then(response => {
+      response.nModified > 0
+        ? res.redirect("/")
+        : res.status(404).render("error", {
+            Error: {
+              code: 404,
+              status: "Not Found",
+              message: "Contact doesn't exist anymore."
+            }
+          });
+    })
+    .catch(err => {
+      res.status(400).render("error", {
+        Error: {
+          code: 400,
+          status: "Bad request",
+          message: `${err.name}. "${err.value}" is invalid.`
+        }
+      });
+    });
 });
 
 // Search Contact Route
@@ -93,7 +167,15 @@ app.post("/contact/search", urlencodedParser, (req, res) => {
         res.render("index", { data: searched });
       }
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      res.status(400).render("error", {
+        Error: {
+          code: 400,
+          status: err.name,
+          message: err.message
+        }
+      });
+    });
 });
 
 // 404 Page Not Found Route
