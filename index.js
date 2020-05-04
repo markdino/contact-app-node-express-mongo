@@ -4,9 +4,12 @@ const bodyParser = require("body-parser");
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 const jsonData = require("./data.json");
 const Contact = require("./models/contact");
+const dbMongoose = require("./db/mongoose");
 
 app.set("view engine", "ejs");
 app.use(express.static("./assets"));
+
+dbMongoose.connect();
 
 // Home Route
 app.get("/", (req, res) => {

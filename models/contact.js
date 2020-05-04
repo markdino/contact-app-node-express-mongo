@@ -1,10 +1,5 @@
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb://localhost/contact", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-});
-
 const personSchema = new mongoose.Schema({
   avatar: String,
   name: { type: String, require: [true, "Name field is reuired"] },
