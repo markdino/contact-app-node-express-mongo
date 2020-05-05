@@ -58,6 +58,10 @@
         <form action="/contact/save" method="post">
           <input type="text" name="avatar" id="avatar" class="d-none" />
           <section class="input-group">
+            <input type="checkbox" id="private" name="private" checked />
+            <label for="private">Private</label>
+          </section>
+          <section class="input-group">
             <label for="name">Name</label>
             <input type="text" id="name" name="name" required />
           </section>

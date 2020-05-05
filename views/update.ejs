@@ -68,6 +68,14 @@
             value="<%= person.avatar %>"
           />
           <section class="input-group">
+            <% if (person.private === true) { %>
+            <input type="checkbox" id="private" name="private" checked />
+            <% }else{ %>
+            <input type="checkbox" id="private" name="private" />
+            <% } %>
+            <label for="private">Private</label>
+          </section>
+          <section class="input-group">
             <label for="name">Name</label>
             <input
               type="text"

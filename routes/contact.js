@@ -7,19 +7,11 @@ const isLoggedIn = require("../middleware/isLoggedIn");
 
 // Home
 router.get("/", isLoggedIn, (req, res) => {
-  Contact.find({})
+  Contact.find({ owner: req.user._id })
     .sort({ name: 1 })
     .select("name avatar")
     .then(result => {
-      // If mongodb is empty create new data coming from JSON file (data.json)
-      if (result.length <= 0) {
-        Contact.create(jsonData)
-          .then(() => res.redirect("/contact"))
-          .catch(err => console.log(err));
-        // If mongodb has a data then get the data then render
-      } else {
-        res.render("index", { data: result, user: req.user });
-      }
+      res.render("index", { data: result, user: req.user });
     })
     .catch(err => {
       res.status(400).render("error", {
@@ -89,6 +81,9 @@ router.get("/create", isLoggedIn, (req, res) => {
 
 // Save Contact
 router.post("/save", [urlencodedParser, isLoggedIn], (req, res) => {
+  req.body.owner = req.user._id;
+  req.body.private = req.body.private === "on" ? true : false;
+
   Contact.create(req.body)
     .then(() => res.redirect("/contact"))
     .catch(err => {
@@ -125,6 +120,7 @@ router.get("/:id/edit", isLoggedIn, (req, res) => {
 
 // Update Contact
 router.post("/:id/update", [urlencodedParser, isLoggedIn], (req, res) => {
+  req.body.private = req.body.private === "on" ? true : false;
   Contact.updateOne({ _id: req.params.id }, { $set: req.body })
     .then(response => {
       response.nModified > 0
@@ -150,7 +146,7 @@ router.post("/:id/update", [urlencodedParser, isLoggedIn], (req, res) => {
 
 // Search Contact
 router.post("/search", [urlencodedParser, isLoggedIn], (req, res) => {
-  Contact.find()
+  Contact.find({ owner: req.user._id })
     .select("name avatar")
     .then(result => {
       const searched = result.filter(person => {
