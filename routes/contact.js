@@ -3,9 +3,10 @@ const jsonData = require("../data.json");
 const Contact = require("../models/contact");
 const bodyParser = require("body-parser");
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
+const isLoggedIn = require("../middleware/isLoggedIn");
 
 // Home
-router.get("/", (req, res) => {
+router.get("/", isLoggedIn, (req, res) => {
   Contact.find({})
     .sort({ name: 1 })
     .select("name avatar")
@@ -32,7 +33,7 @@ router.get("/", (req, res) => {
 });
 
 // Contact View
-router.get("/:id/view", (req, res) => {
+router.get("/:id/view", isLoggedIn, (req, res) => {
   Contact.findOne({ _id: req.params.id })
     .then(result => {
       result
@@ -57,7 +58,7 @@ router.get("/:id/view", (req, res) => {
 });
 
 // Delete Contact
-router.post("/:id/delete", (req, res) => {
+router.post("/:id/delete", isLoggedIn, (req, res) => {
   Contact.deleteOne({ _id: req.params.id })
     .then(response => {
       response.deletedCount > 0
@@ -82,12 +83,12 @@ router.post("/:id/delete", (req, res) => {
 });
 
 // Create Contact
-router.get("/create", (req, res) => {
+router.get("/create", isLoggedIn, (req, res) => {
   res.render("create");
 });
 
 // Save Contact
-router.post("/save", urlencodedParser, (req, res) => {
+router.post("/save", [urlencodedParser, isLoggedIn], (req, res) => {
   Contact.create(req.body)
     .then(() => res.redirect("/contact"))
     .catch(err => {
@@ -98,7 +99,7 @@ router.post("/save", urlencodedParser, (req, res) => {
 });
 
 // Edit Contact
-router.get("/:id/edit", (req, res) => {
+router.get("/:id/edit", isLoggedIn, (req, res) => {
   Contact.findOne({ _id: req.params.id })
     .then(result => {
       result
@@ -123,7 +124,7 @@ router.get("/:id/edit", (req, res) => {
 });
 
 // Update Contact
-router.post("/:id/update", urlencodedParser, (req, res) => {
+router.post("/:id/update", [urlencodedParser, isLoggedIn], (req, res) => {
   Contact.updateOne({ _id: req.params.id }, { $set: req.body })
     .then(response => {
       response.nModified > 0
@@ -148,7 +149,7 @@ router.post("/:id/update", urlencodedParser, (req, res) => {
 });
 
 // Search Contact
-router.post("/search", urlencodedParser, (req, res) => {
+router.post("/search", [urlencodedParser, isLoggedIn], (req, res) => {
   Contact.find()
     .select("name avatar")
     .then(result => {
