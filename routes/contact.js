@@ -17,7 +17,7 @@ router.get("/", (req, res) => {
           .catch(err => console.log(err));
         // If mongodb has a data then get the data then render
       } else {
-        res.render("index", { data: result });
+        res.render("index", { data: result, user: req.user });
       }
     })
     .catch(err => {
@@ -160,7 +160,7 @@ router.post("/search", urlencodedParser, (req, res) => {
       if (req.body.search === "") {
         res.redirect("/contact");
       } else {
-        res.render("index", { data: searched });
+        res.render("index", { data: searched, user: req.user });
       }
     })
     .catch(err => {
