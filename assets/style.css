@@ -53,6 +53,10 @@ a {
   justify-content: space-between;
 }
 
+.flex-space-around {
+  justify-content: space-around;
+}
+
 .text-primary {
   color: #007bff;
 }
