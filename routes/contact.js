@@ -53,9 +53,21 @@ router.get("/private", isLoggedIn, (req, res) => {
 });
 
 // Contact View
-router.get("/:id/view", isLoggedIn, (req, res) => {
+router.get("/:id/view", (req, res) => {
   Contact.findOne({ _id: req.params.id })
     .then(result => {
+      if (result.private) {
+        if (!req.user) return res.redirect("/user/login");
+        if (result.owner.toString() !== req.user._id.toString())
+          return res.status(404).render("error", {
+            Error: {
+              code: 403,
+              status: "Forbidden",
+              message: "Access denied."
+            }
+          });
+      }
+
       result
         ? res.render("view", { person: result })
         : res.status(404).render("error", {
