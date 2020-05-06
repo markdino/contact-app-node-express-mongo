@@ -40,9 +40,9 @@ router.get("/private", isLoggedIn, (req, res) => {
     });
 });
 
-// Contact View
+// Contact details View
 router.get("/:id/view", (req, res) => {
-  Contact.findOne({ _id: req.params.id })
+  Contact.findById(req.params.id)
     .then(result => {
       if (result.private) {
         if (!req.user) return res.redirect("/user/login");
@@ -76,7 +76,13 @@ router.get("/:id/view", (req, res) => {
 });
 
 // Delete Contact
-router.post("/:id/delete", isLoggedIn, (req, res) => {
+router.post("/:id/delete", isLoggedIn, async (req, res) => {
+  const result = await Contact.findById(req.params.id);
+  if (result.owner.toString() !== req.user._id.toString())
+    return res
+      .status(403)
+      .render("error", errorAlert(403, "Forbidden", "Access denied."));
+
   Contact.deleteOne({ _id: req.params.id })
     .then(response => {
       response.deletedCount > 0
@@ -121,8 +127,13 @@ router.post("/save", [urlencodedParser, isLoggedIn], (req, res) => {
 
 // Edit Contact
 router.get("/:id/edit", isLoggedIn, (req, res) => {
-  Contact.findOne({ _id: req.params.id })
+  Contact.findById(req.params.id)
     .then(result => {
+      if (result.owner.toString() !== req.user._id.toString())
+        return res
+          .status(403)
+          .render("error", errorAlert(403, "Forbidden", "Access denied."));
+
       result
         ? res.render("update", { person: result })
         : res
@@ -147,7 +158,13 @@ router.get("/:id/edit", isLoggedIn, (req, res) => {
 });
 
 // Update Contact
-router.post("/:id/update", [urlencodedParser, isLoggedIn], (req, res) => {
+router.post("/:id/update", [urlencodedParser, isLoggedIn], async (req, res) => {
+  const result = await Contact.findById(req.params.id);
+  if (result.owner.toString() !== req.user._id.toString())
+    return res
+      .status(403)
+      .render("error", errorAlert(403, "Forbidden", "Access denied."));
+
   req.body.private = req.body.private === "on" ? true : false;
   Contact.updateOne({ _id: req.params.id }, { $set: req.body })
     .then(response => {
