@@ -29,3 +29,7 @@ module.exports.search = (result, req, res, options) => {
     });
   }
 };
+
+module.exports.errorAlert = (code, status, message) => {
+  return { Error: { code, status, message } };
+};

@@ -4,7 +4,7 @@ const Contact = require("../models/contact");
 const bodyParser = require("body-parser");
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 const isLoggedIn = require("../middleware/isLoggedIn");
-const { search } = Contact;
+const { search, errorAlert } = Contact;
 
 // My contacts
 router.get("/", isLoggedIn, (req, res) => {
@@ -19,13 +19,7 @@ router.get("/", isLoggedIn, (req, res) => {
       });
     })
     .catch(err => {
-      res.status(400).render("error", {
-        Error: {
-          code: 400,
-          status: err.name,
-          message: err.message
-        }
-      });
+      res.status(400).render("error", errorAlert(400, err.name, err.message));
     });
 });
 
@@ -42,13 +36,7 @@ router.get("/private", isLoggedIn, (req, res) => {
       });
     })
     .catch(err => {
-      res.status(400).render("error", {
-        Error: {
-          code: 400,
-          status: err.name,
-          message: err.message
-        }
-      });
+      res.status(400).render("error", errorAlert(400, err.name, err.message));
     });
 });
 
@@ -59,33 +47,31 @@ router.get("/:id/view", (req, res) => {
       if (result.private) {
         if (!req.user) return res.redirect("/user/login");
         if (result.owner.toString() !== req.user._id.toString())
-          return res.status(404).render("error", {
-            Error: {
-              code: 403,
-              status: "Forbidden",
-              message: "Access denied."
-            }
-          });
+          return res
+            .status(403)
+            .render("error", errorAlert(403, "Forbidden", "Access denied."));
       }
 
       result
         ? res.render("view", { person: result })
-        : res.status(404).render("error", {
-            Error: {
-              code: 404,
-              status: "Not Found",
-              message: "Contact not found or invalid id."
-            }
-          });
+        : res
+            .status(404)
+            .render(
+              "error",
+              errorAlert(404, "Not Found", "Contact not found or invalid id.")
+            );
     })
     .catch(err => {
-      res.status(400).render("error", {
-        Error: {
-          code: 400,
-          status: "Bad request",
-          message: `${err.name}. "${err.value}" is invalid.`
-        }
-      });
+      res
+        .status(400)
+        .render(
+          "error",
+          errorAlert(
+            400,
+            "Bad request",
+            `${err.name}. "${err.value}" is invalid.`
+          )
+        );
     });
 });
 
@@ -95,22 +81,24 @@ router.post("/:id/delete", isLoggedIn, (req, res) => {
     .then(response => {
       response.deletedCount > 0
         ? res.redirect("/contact")
-        : res.status(400).render("error", {
-            Error: {
-              code: 404,
-              status: "Not Found",
-              message: "Contact already been deleted."
-            }
-          });
+        : res
+            .status(400)
+            .render(
+              "error",
+              errorAlert(404, "Not Found", "Contact already been deleted.")
+            );
     })
     .catch(err => {
-      res.status(400).render("error", {
-        Error: {
-          code: 400,
-          status: "Bad request",
-          message: `${err.name}. "${err.value}" is invalid.`
-        }
-      });
+      res
+        .status(400)
+        .render(
+          "error",
+          errorAlert(
+            400,
+            "Bad request",
+            `${err.name}. "${err.value}" is invalid.`
+          )
+        );
     });
 });
 
@@ -127,9 +115,7 @@ router.post("/save", [urlencodedParser, isLoggedIn], (req, res) => {
   Contact.create(req.body)
     .then(() => res.redirect("/contact"))
     .catch(err => {
-      res.status(400).render("error", {
-        Error: { code: 400, status: err.name, message: err.message }
-      });
+      res.status(400).render("error", errorAlert(400, err.name, err.message));
     });
 });
 
@@ -139,22 +125,24 @@ router.get("/:id/edit", isLoggedIn, (req, res) => {
     .then(result => {
       result
         ? res.render("update", { person: result })
-        : res.status(404).render("error", {
-            Error: {
-              code: 404,
-              status: "Not Found",
-              message: "Contact not found."
-            }
-          });
+        : res
+            .status(404)
+            .render(
+              "error",
+              errorAlert(404, "Not Found", "Contact not found.")
+            );
     })
     .catch(err => {
-      res.status(400).render("error", {
-        Error: {
-          code: 400,
-          status: "Bad request",
-          message: `${err.name}. "${err.value}" is invalid.`
-        }
-      });
+      res
+        .status(400)
+        .render(
+          "error",
+          errorAlert(
+            400,
+            "Bad request",
+            `${err.name}. "${err.value}" is invalid.`
+          )
+        );
     });
 });
 
@@ -165,22 +153,24 @@ router.post("/:id/update", [urlencodedParser, isLoggedIn], (req, res) => {
     .then(response => {
       response.nModified > 0
         ? res.redirect("/contact")
-        : res.status(404).render("error", {
-            Error: {
-              code: 404,
-              status: "Not Found",
-              message: "Contact doesn't exist anymore."
-            }
-          });
+        : res
+            .status(404)
+            .render(
+              "error",
+              errorAlert(404, "Not Found", "Contact doesn't exist anymore.")
+            );
     })
     .catch(err => {
-      res.status(400).render("error", {
-        Error: {
-          code: 400,
-          status: "Bad request",
-          message: `${err.name}. "${err.value}" is invalid.`
-        }
-      });
+      res
+        .status(400)
+        .render(
+          "error",
+          errorAlert(
+            400,
+            "Bad request",
+            `${err.name}. "${err.value}" is invalid.`
+          )
+        );
     });
 });
 
@@ -196,13 +186,7 @@ router.post("/search", [urlencodedParser, isLoggedIn], (req, res) => {
       });
     })
     .catch(err => {
-      res.status(400).render("error", {
-        Error: {
-          code: 400,
-          status: err.name,
-          message: err.message
-        }
-      });
+      res.status(400).render("error", errorAlert(400, err.name, err.message));
     });
 });
 
@@ -217,13 +201,7 @@ router.post("/private/search", [urlencodedParser, isLoggedIn], (req, res) => {
       });
     })
     .catch(err => {
-      res.status(400).render("error", {
-        Error: {
-          code: 400,
-          status: err.name,
-          message: err.message
-        }
-      });
+      res.status(400).render("error", errorAlert(400, err.name, err.message));
     });
 });
 
