@@ -4,14 +4,42 @@ const Contact = require("../models/contact");
 const bodyParser = require("body-parser");
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 const isLoggedIn = require("../middleware/isLoggedIn");
+const search = require("../middleware/search");
 
-// Home
+// My contacts
 router.get("/", isLoggedIn, (req, res) => {
   Contact.find({ owner: req.user._id })
     .sort({ name: 1 })
     .select("name avatar")
     .then(result => {
-      res.render("index", { data: result, user: req.user });
+      res.render("index", {
+        data: result,
+        user: req.user,
+        status: "mycontact"
+      });
+    })
+    .catch(err => {
+      res.status(400).render("error", {
+        Error: {
+          code: 400,
+          status: err.name,
+          message: err.message
+        }
+      });
+    });
+});
+
+// Private contacts
+router.get("/private", isLoggedIn, (req, res) => {
+  Contact.find({ owner: req.user._id, private: true })
+    .sort({ name: 1 })
+    .select("name avatar")
+    .then(result => {
+      res.render("index", {
+        data: result,
+        user: req.user,
+        status: "private"
+      });
     })
     .catch(err => {
       res.status(400).render("error", {
@@ -149,16 +177,32 @@ router.post("/search", [urlencodedParser, isLoggedIn], (req, res) => {
   Contact.find({ owner: req.user._id })
     .select("name avatar")
     .then(result => {
-      const searched = result.filter(person => {
-        const personLC = person.name.toLowerCase();
-        const searchLC = req.body.search.toLowerCase();
-        return personLC.includes(searchLC);
+      search(result, req, res, {
+        emptyRedirect: "/contact",
+        render: "index",
+        status: "mycontact"
       });
-      if (req.body.search === "") {
-        res.redirect("/contact");
-      } else {
-        res.render("index", { data: searched, user: req.user });
-      }
+    })
+    .catch(err => {
+      res.status(400).render("error", {
+        Error: {
+          code: 400,
+          status: err.name,
+          message: err.message
+        }
+      });
+    });
+});
+
+router.post("/private/search", [urlencodedParser, isLoggedIn], (req, res) => {
+  Contact.find({ owner: req.user._id, private: true })
+    .select("name avatar")
+    .then(result => {
+      search(result, req, res, {
+        emptyRedirect: "/contact/private",
+        render: "index",
+        status: "private"
+      });
     })
     .catch(err => {
       res.status(400).render("error", {

@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const dbMongoose = require("./db/mongoose");
+const public = require("./routes/public");
 const contact = require("./routes/contact");
 const user = require("./routes/user");
 const pageNotFound = require("./routes/404");
@@ -16,6 +17,7 @@ passportSetup(app);
 dbMongoose.connect();
 
 // Routes
+app.use("/", public);
 app.use("/contact", contact);
 app.use("/user", user);
 app.use(pageNotFound);
