@@ -8,14 +8,49 @@
   </head>
   <body>
     <main class="container p-10">
+      <section class="top-bar bg-dark text-light d-flex flex-center">
+        <section>
+          <%= user ? user.username : '' %>
+        </section>
+        <section>
+          <% if (!user) { %>
+          <a href="/user/signup" class="badge badge-pill badge-primary">
+            signup
+          </a>
+          <a href="/user/login" class="badge badge-pill badge-success">
+            login
+          </a>
+          <% }else{ %>
+          <a href="/user/logout" class="badge badge-pill badge-secondary">
+            logout
+          </a>
+          <% } %>
+        </section>
+      </section>
       <!-- Search bar -->
       <nav id="search-nav" class="row p-10">
-        <form
-          action="/contact/search"
+        <% if (status ==='mycontact') { %>
+          <form
+            action="/contact/search"
+            method="POST"
+            id="search-form"
+            class="row"
+          >
+        <% }else if (status === 'public') { %>
+          <form
+          action="/search"
           method="POST"
           id="search-form"
           class="row"
-        >
+          >
+        <% }else if (status === 'private') { %>
+          <form
+          action="/contact/private/search"
+          method="POST"
+          id="search-form"
+          class="row"
+          >
+        <% } %>
           <section class="search-group row">
             <label for="search-field">Search</label>
             <section id="search-border" class="row">
@@ -43,6 +78,26 @@
           </svg>
         </a>
       </nav>
+      <!-- Menu Bar -->
+      <section class="menu-bar d-flex flex-space-around">
+        <% if (status === 'public') { %>
+        <div class="badge badge-pill badge-light">Public</div>
+        <% }else{ %>
+        <a href="/" class="badge badge-pill badge-secondary">Public</a>
+        <% } %> <% if (status === 'mycontact') { %>
+        <div class="badge badge-pill badge-light">My Contacts</div>
+        <% }else{ %>
+        <a href="/contact" class="badge badge-pill badge-secondary"
+          >My Contacts</a
+        >
+        <% } %> <% if (status === 'private') { %>
+        <div class="badge badge-pill badge-light">Private</div>
+        <% }else{ %>
+        <a href="/contact/private" class="badge badge-pill badge-secondary"
+          >Private</a
+        >
+        <% } %>
+      </section>
       <!-- Contact List -->
       <section class="contacts py-10">
         <% data.forEach(person=>{ %>

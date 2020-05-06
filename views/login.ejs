@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create | Contact App</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <!-- Signup Form -->
+      <section id="img-modal">
+        <section class="row modal-wrapper">
+          <main class="p-10 modal-container">
+            <header class="d-flex flex-center">
+              <a href="/user/signup">
+                <h1 class="text-primary text-muted">Sign Up</h1>
+              </a>
+              <h1 class="text-muted">|</h1>
+              <h1 class="text-success">Login</h1>
+            </header>
+            <form action="/user/login" method="post">
+              <section class="input-group">
+                <label for="username">Username</label>
+                <input type="username" name="username" id="username" required />
+              </section>
+              <section class="input-group">
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" />
+              </section>
+              <section class="buttons">
+                <button type="submit" class="btn-success">login</button>
+              </section>
+            </form>
+          </main>
+        </section>
+      </section>
+    </main>
+  </body>
+</html>

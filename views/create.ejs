@@ -11,7 +11,7 @@
       <!-- Contact Thumbnail -->
       <section class="thumbnail-details">
         <section class="buttons">
-          <a href="/" id="cancel-btn"><p>Cancel</p></a>
+          <a href="/contact" id="cancel-btn"><p>Cancel</p></a>
           <a
             id="save-btn"
             onclick="document.querySelector('#submit-btn').click()"
@@ -57,6 +57,10 @@
       <main class="p-10">
         <form action="/contact/save" method="post">
           <input type="text" name="avatar" id="avatar" class="d-none" />
+          <section class="input-group">
+            <input type="checkbox" id="private" name="private" checked />
+            <label for="private">Private</label>
+          </section>
           <section class="input-group">
             <label for="name">Name</label>
             <input type="text" id="name" name="name" required />

@@ -11,7 +11,7 @@
       <!-- Contact Thumbnail -->
       <section class="thumbnail-details">
         <section class="buttons">
-          <a href="/" id="cancel-btn"><p>Cancel</p></a>
+          <a href="/contact" id="cancel-btn"><p>Cancel</p></a>
           <a
             id="save-btn"
             onclick="document.querySelector('#submit-btn').click()"
@@ -67,6 +67,14 @@
             class="d-none"
             value="<%= person.avatar %>"
           />
+          <section class="input-group">
+            <% if (person.private === true) { %>
+            <input type="checkbox" id="private" name="private" checked />
+            <% }else{ %>
+            <input type="checkbox" id="private" name="private" />
+            <% } %>
+            <label for="private">Private</label>
+          </section>
           <section class="input-group">
             <label for="name">Name</label>
             <input
