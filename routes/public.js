@@ -2,7 +2,7 @@ const router = require("express").Router();
 const Contact = require("../models/contact");
 const bodyParser = require("body-parser");
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
-const search = require("../middleware/search");
+const { search } = Contact;
 
 // Public contacts
 router.get("/", (req, res) => {

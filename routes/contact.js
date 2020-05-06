@@ -4,7 +4,7 @@ const Contact = require("../models/contact");
 const bodyParser = require("body-parser");
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 const isLoggedIn = require("../middleware/isLoggedIn");
-const search = require("../middleware/search");
+const { search } = Contact;
 
 // My contacts
 router.get("/", isLoggedIn, (req, res) => {
