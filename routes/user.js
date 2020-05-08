@@ -1,8 +1,9 @@
 const router = require("express").Router();
 const bodyParser = require("body-parser");
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
-const User = require("../models/user");
 const passport = require("passport");
+const User = require("../models/user");
+const { errorAlert } = require("../models/contact");
 
 // Sign Up
 router.get("/signup", (req, res) => {
@@ -15,13 +16,9 @@ router.post("/signup", urlencodedParser, (req, res) => {
     req.body.password,
     (err, user) => {
       if (err)
-        return res.status(400).render("error", {
-          Error: {
-            code: 400,
-            status: err.name,
-            message: err.message
-          }
-        });
+        return res
+          .status(400)
+          .render("error", errorAlert(400, err.name, err.message));
       passport.authenticate("local")(req, res, () => res.redirect("/contact"));
     }
   );
@@ -36,11 +33,11 @@ router.post("/login", [
   urlencodedParser,
   passport.authenticate("local", {
     successRedirect: "/contact",
-    failureRedirect: "/user/login"
-  })
+    failureRedirect: "/user/login",
+  }),
 ]);
 
-//
+// LogOut
 router.get("/logout", (req, res) => {
   req.logout();
   res.redirect("/");

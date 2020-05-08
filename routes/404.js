@@ -1,9 +1,10 @@
 const router = require("express").Router();
+const { errorAlert } = require("../models/contact");
 
 router.get("*", (req, res) => {
-  res.status(404).render("error", {
-    Error: { code: 404, status: "Not Found", message: "Page Not Found!" }
-  });
+  res
+    .status(404)
+    .render("error", errorAlert(404, "Not Found", "Page Not Found!"));
 });
 
 module.exports = router;
