@@ -4,7 +4,12 @@
   "description": "List of contacts",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "develop": "nodemon index.js"
+  },
+  "engines": {
+    "node": "10.16.3"
   },
   "keywords": [
     "contact",
@@ -14,7 +19,9 @@
   "author": "Mark Dino Pelonia",
   "license": "ISC",
   "dependencies": {
+    "@hapi/joi": "^17.1.1",
     "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
     "ejs": "^3.0.1",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
