@@ -1,10 +1,11 @@
+require("dotenv").config();
 const mongoose = require("mongoose");
 
 module.exports = {
   connect() {
-    mongoose.connect("mongodb://localhost/contact", {
+    mongoose.connect(process.env.DB_PATH, {
       useNewUrlParser: true,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
     });
-  }
+  },
 };

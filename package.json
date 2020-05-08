@@ -1,6 +1,6 @@
 {
   "name": "contact-app",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "List of contacts",
   "main": "index.js",
   "scripts": {
