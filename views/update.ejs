@@ -39,7 +39,7 @@
       </section>
       <!-- Image Modal -->
       <section id="img-modal" class="d-none">
-        <section class="row modal-wrapper">
+        <section class="row align-item-center modal-wrapper">
           <section class="modal-container">
             <section class="input-group">
               <label for="img-link">Image link</label>
@@ -47,7 +47,7 @@
                 type="text"
                 id="img-link"
                 placeholder="https://"
-                value="<%= person.avatar %>"
+                value="<%= person.avatar !== '/user.svg' ? person.avatar : '' %>"
               />
             </section>
             <section class="buttons">
@@ -67,7 +67,7 @@
             class="d-none"
             value="<%= person.avatar %>"
           />
-          <section class="input-group">
+          <section class="input-group row">
             <% if (person.private === true) { %>
             <input type="checkbox" id="private" name="private" checked />
             <% }else{ %>
@@ -132,11 +132,12 @@
       const avatarImg = document.querySelector("#img-avatar");
 
       function getImage(callback) {
-        if (imgLink.value.length > 0) {
-          avatarField.value = imgLink.value;
-          avatarImg.src = imgLink.value;
-          callback();
-        }
+        let img = imgLink.value;
+        if (imgLink.value.length <= 0) img = "/user.svg";
+
+        avatarField.value = img;
+        avatarImg.src = img;
+        callback();
       }
       function showModal() {
         imgModal.classList.remove("d-none");

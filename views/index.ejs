@@ -8,7 +8,7 @@
   </head>
   <body>
     <main class="container p-10">
-      <section class="top-bar bg-dark text-light d-flex flex-center">
+      <section class="top-bar bg-dark text-light row flex-space-between">
         <section>
           <%= user ? user.username : '' %>
         </section>
@@ -28,30 +28,27 @@
         </section>
       </section>
       <!-- Search bar -->
-      <nav id="search-nav" class="row p-10">
+      <nav id="search-nav" class="row align-item-center p-10">
         <% if (status ==='mycontact') { %>
           <form
             action="/contact/search"
             method="POST"
             id="search-form"
-            class="row"
           >
         <% }else if (status === 'public') { %>
           <form
           action="/search"
           method="POST"
           id="search-form"
-          class="row"
           >
         <% }else if (status === 'private') { %>
           <form
           action="/contact/private/search"
           method="POST"
           id="search-form"
-          class="row"
           >
         <% } %>
-          <section class="search-group row">
+          <section class="search-group row align-item-center">
             <label for="search-field">Search</label>
             <section id="search-border" class="row">
               <input type="search" name="search" id="search-field" />
@@ -65,12 +62,7 @@
             </section>
           </section>
         </form>
-        <a
-          id="add-btn"
-          class="row"
-          title="Add new contact"
-          href="/contact/create"
-        >
+        <a id="add-btn" class="row" title="Add new contact" href="/contact/create">
           <svg viewBox="0 0 448 512" class="add-svg">
             <path
               d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"
@@ -101,7 +93,7 @@
       <!-- Contact List -->
       <section class="contacts py-10">
         <% data.forEach(person=>{ %>
-        <section id="contact-list" class="row my-10">
+        <section id="contact-list" class="row align-item-center my-10">
           <section class="avatar-circle">
             <img
               src="<%= person.avatar || `/user.svg` %>"

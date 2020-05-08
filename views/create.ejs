@@ -35,7 +35,7 @@
       </section>
       <!-- Image Modal -->
       <section id="img-modal" class="d-none">
-        <section class="row modal-wrapper">
+        <section class="row align-item-center modal-wrapper">
           <section class="modal-container">
             <section class="input-group">
               <label for="img-link">Image link</label>
@@ -57,7 +57,7 @@
       <main class="p-10">
         <form action="/contact/save" method="post">
           <input type="text" name="avatar" id="avatar" class="d-none" />
-          <section class="input-group">
+          <section class="input-group row">
             <input type="checkbox" id="private" name="private" checked />
             <label for="private">Private</label>
           </section>
@@ -92,11 +92,12 @@
       const avatarImg = document.querySelector("#img-avatar");
 
       function getImage(callback) {
-        if (imgLink.value.length > 0) {
-          avatarField.value = imgLink.value;
-          avatarImg.src = imgLink.value;
-          callback();
-        }
+        let img = imgLink.value;
+        if (imgLink.value.length <= 0) img = "/user.svg";
+
+        avatarField.value = img;
+        avatarImg.src = img;
+        callback();
       }
       function showModal() {
         imgModal.classList.remove("d-none");

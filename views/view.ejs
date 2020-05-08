@@ -29,12 +29,12 @@
       <!-- Contact Details -->
       <main class="p-10">
         <% if(person.mobile){ %>
-        <section class="row my-10">
-          <section>
+        <section class="row flex-space-between align-item-center my-10">
+          <section class="over-flow-hidden">
             <p class="value"><%= person.mobile %></p>
             <p class="property">Mobile</p>
           </section>
-          <section>
+          <section class="row">
             <a class="details-btn" href="tel:<%= person.mobile %>">
               <svg id="call" class="details-svg" viewBox="0 0 512 512">
                 <path
@@ -53,8 +53,8 @@
         </section>
         <hr />
         <% } %> <% if(person.tel){ %>
-        <section class="row my-10">
-          <section>
+        <section class="row flex-space-between align-item-center my-10">
+          <section class="over-flow-hidden">
             <p class="value"><%= person.tel %></p>
             <p class="property">Tel</p>
           </section>
@@ -77,8 +77,8 @@
         </section>
         <hr />
         <% } %> <% if(person.email){ %>
-        <section class="row my-10">
-          <section>
+        <section class="row flex-space-between align-item-center my-10">
+          <section class="over-flow-hidden">
             <p class="value"><%= person.email %></p>
             <p class="property">Email</p>
           </section>
@@ -94,8 +94,8 @@
         </section>
         <hr />
         <% } %> <% if(person.address){ %>
-        <section class="row my-10">
-          <section>
+        <section class="row flex-space-between align-item-center my-10">
+          <section class="over-flow-hidden">
             <p class="value"><%= person.address %></p>
             <p class="property">Address</p>
           </section>
