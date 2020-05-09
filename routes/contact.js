@@ -50,17 +50,16 @@ router.get("/:id/view", (req, res) => {
             .status(403)
             .render("error", errorAlert(403, "Forbidden", "Access denied."));
       }
-
-      result
-        ? res.render("view", { person: result })
-        : res
-            .status(404)
+	  res.render("view", { person: result })
+    })
+    .catch(err => {
+	  if (!err.value)
+		  return res
+			.status(404)
             .render(
               "error",
               errorAlert(404, "Not Found", "Contact not found or invalid id.")
             );
-    })
-    .catch(err => {
       res
         .status(400)
         .render(
