@@ -1,5 +1,4 @@
 const router = require("express").Router();
-const jsonData = require("../data.json");
 const Contact = require("../models/contact");
 const bodyParser = require("body-parser");
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
