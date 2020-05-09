@@ -105,7 +105,7 @@
             <%= person.name %>
           </a>
           <section>
-            <% if (status === 'mycontact') { %>
+            <% if (status === 'mycontact' || status === 'private') { %>
             <form action="/contact/<%= person._id %>/delete" method="POST">
               <button class="delete" title="Delete contact">
                 <svg viewBox="0 0 448 512" class="delete-svg">
