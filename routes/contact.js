@@ -161,6 +161,13 @@ router.get("/:id/edit", isLoggedIn, (req, res) => {
 // Update Contact
 router.post("/:id/update", [urlencodedParser, isLoggedIn], async (req, res) => {
   const result = await Contact.findById(req.params.id);
+  if (!result)
+    return res
+      .status(404)
+      .render(
+        "error",
+        errorAlert(404, "Not Found", "Contact doesn't exist anymore.")
+      );
   if (result.owner.toString() !== req.user._id.toString())
     return res
       .status(403)
@@ -170,16 +177,7 @@ router.post("/:id/update", [urlencodedParser, isLoggedIn], async (req, res) => {
   let name = req.body.name;
   req.body.name = name.replace(name[0], name[0].toUpperCase());
   Contact.updateOne({ _id: req.params.id }, { $set: req.body })
-    .then(response => {
-      response.nModified > 0
-        ? res.redirect("/contact")
-        : res
-            .status(404)
-            .render(
-              "error",
-              errorAlert(404, "Not Found", "Contact doesn't exist anymore.")
-            );
-    })
+    .then(() => res.redirect("/contact"))
     .catch(err => {
       res
         .status(400)
