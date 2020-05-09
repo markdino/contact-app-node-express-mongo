@@ -424,9 +424,16 @@ a {
   justify-content: space-around;
 }
 
-.over-flow-hidden {
+.over-flow-hidden,
+.text-ellipsis {
   overflow: hidden;
 }
+
+.text-ellipsis {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .text-primary {
   color: #007bff;
 }

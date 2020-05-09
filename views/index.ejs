@@ -9,8 +9,8 @@
   <body>
     <main class="container p-10">
       <section class="top-bar bg-dark text-light row flex-space-between">
-        <section>
-          <%= user ? user.username : '' %>
+        <section class="text-success text-ellipsis">
+          <%= `${user ? user.username + ' | ' : ''}` %><span class="text-light">Contact App</span>
         </section>
         <section>
           <% if (!user) { %>
