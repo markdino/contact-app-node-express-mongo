@@ -77,22 +77,21 @@ router.get("/:id/view", (req, res) => {
 // Delete Contact
 router.post("/:id/delete", isLoggedIn, async (req, res) => {
   const result = await Contact.findById(req.params.id);
+  if (!result)
+    return res
+      .status(404)
+      .render(
+        "error",
+        errorAlert(404, "Not Found", "Contact already been deleted.")
+      );
+	  
   if (result.owner.toString() !== req.user._id.toString())
     return res
       .status(403)
       .render("error", errorAlert(403, "Forbidden", "Access denied."));
 
   Contact.deleteOne({ _id: req.params.id })
-    .then(response => {
-      response.deletedCount > 0
-        ? res.redirect("/contact")
-        : res
-            .status(400)
-            .render(
-              "error",
-              errorAlert(404, "Not Found", "Contact already been deleted.")
-            );
-    })
+    .then(() => res.redirect("/contact"))
     .catch(err => {
       res
         .status(400)
