@@ -116,6 +116,8 @@ router.get("/create", isLoggedIn, (req, res) => {
 router.post("/save", [urlencodedParser, isLoggedIn], (req, res) => {
   req.body.owner = req.user._id;
   req.body.private = req.body.private === "on" ? true : false;
+  let name = req.body.name;
+  req.body.name = name.replace(name[0], name[0].toUpperCase());
 
   Contact.create(req.body)
     .then(() => res.redirect("/contact"))
@@ -165,6 +167,8 @@ router.post("/:id/update", [urlencodedParser, isLoggedIn], async (req, res) => {
       .render("error", errorAlert(403, "Forbidden", "Access denied."));
 
   req.body.private = req.body.private === "on" ? true : false;
+  let name = req.body.name;
+  req.body.name = name.replace(name[0], name[0].toUpperCase());
   Contact.updateOne({ _id: req.params.id }, { $set: req.body })
     .then(response => {
       response.nModified > 0
