@@ -1,8 +1,8 @@
 const router = require("express").Router();
-const Contact = require("../models/contact");
 const bodyParser = require("body-parser");
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 const isLoggedIn = require("../middleware/isLoggedIn");
+const Contact = require("../models/contact");
 const { search, errorAlert } = Contact;
 
 // My contacts
@@ -50,16 +50,16 @@ router.get("/:id/view", (req, res) => {
             .status(403)
             .render("error", errorAlert(403, "Forbidden", "Access denied."));
       }
-	  res.render("view", { person: result })
+      res.render("view", { person: result })
     })
     .catch(err => {
-	  if (!err.value)
-		  return res
-			.status(404)
-            .render(
-              "error",
-              errorAlert(404, "Not Found", "Contact not found or invalid id.")
-            );
+      if (!err.value)
+        return res
+          .status(404)
+          .render(
+            "error",
+            errorAlert(404, "Not Found", "Contact not found or invalid id.")
+          );
       res
         .status(400)
         .render(
@@ -83,7 +83,7 @@ router.post("/:id/delete", isLoggedIn, async (req, res) => {
         "error",
         errorAlert(404, "Not Found", "Contact already been deleted.")
       );
-	  
+
   if (result.owner.toString() !== req.user._id.toString())
     return res
       .status(403)
@@ -136,11 +136,11 @@ router.get("/:id/edit", isLoggedIn, (req, res) => {
       result
         ? res.render("update", { person: result })
         : res
-            .status(404)
-            .render(
-              "error",
-              errorAlert(404, "Not Found", "Contact not found.")
-            );
+          .status(404)
+          .render(
+            "error",
+            errorAlert(404, "Not Found", "Contact not found.")
+          );
     })
     .catch(err => {
       res

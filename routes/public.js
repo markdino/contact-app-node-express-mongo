@@ -1,7 +1,7 @@
 const router = require("express").Router();
-const Contact = require("../models/contact");
 const bodyParser = require("body-parser");
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
+const Contact = require("../models/contact");
 const { search, errorAlert } = Contact;
 
 // Public contacts
