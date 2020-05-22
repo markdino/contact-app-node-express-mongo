@@ -3,7 +3,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("../models/user");
 
-module.exports = (app) => {
+module.exports.setup = (app) => {
   app.use(
     require("express-session")({
       secret: process.env.SECRET,
