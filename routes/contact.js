@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 const isLoggedIn = require("../middleware/isLoggedIn");
 const Contact = require("../models/contact");
-const { search, errorAlert } = Contact;
+const { search, errorAlert, filter } = Contact;
 
 // My contacts
 router.get("/", isLoggedIn, (req, res) => {
@@ -113,11 +113,15 @@ router.get("/create", isLoggedIn, (req, res) => {
 // Save Contact
 router.post("/save", [urlencodedParser, isLoggedIn], (req, res) => {
   req.body.owner = req.user._id;
-  req.body.private = req.body.private === "on" ? true : false;
+  req.body.private = (req.body.private === "on" || req.body.private === true);
   let name = req.body.name;
   req.body.name = name.replace(name[0], name[0].toUpperCase());
 
-  Contact.create(req.body)
+  const newContact = filter(
+    req.body,
+    'owner avatar name mobile tel email address private'
+  );
+  Contact.create(newContact)
     .then(() => res.redirect("/contact"))
     .catch(err => {
       res.status(400).render("error", errorAlert(400, err.name, err.message));
@@ -171,10 +175,16 @@ router.post("/:id/update", [urlencodedParser, isLoggedIn], async (req, res) => {
       .status(403)
       .render("error", errorAlert(403, "Forbidden", "Access denied."));
 
-  req.body.private = req.body.private === "on" ? true : false;
+  req.body.private = (req.body.private === "on" || req.body.private === true);
   let name = req.body.name;
   req.body.name = name.replace(name[0], name[0].toUpperCase());
-  Contact.updateOne({ _id: req.params.id }, { $set: req.body })
+
+  const newContact = filter(
+    req.body,
+    'avatar name mobile tel email address private'
+  );
+
+  result.updateOne({ $set: newContact })
     .then(() => res.redirect("/contact"))
     .catch(err => {
       res
@@ -192,10 +202,11 @@ router.post("/:id/update", [urlencodedParser, isLoggedIn], async (req, res) => {
 
 // Search Contact
 router.post("/search", [urlencodedParser, isLoggedIn], (req, res) => {
+  const query = req.body.search
   Contact.find({ owner: req.user._id })
     .select("name avatar")
     .then(result => {
-      search(result, req, res, {
+      search(result, query, req, res, {
         emptyRedirect: "/contact",
         render: "index",
         status: "mycontact"
@@ -207,10 +218,11 @@ router.post("/search", [urlencodedParser, isLoggedIn], (req, res) => {
 });
 
 router.post("/private/search", [urlencodedParser, isLoggedIn], (req, res) => {
+  const query = req.body.search
   Contact.find({ owner: req.user._id, private: true })
     .select("name avatar")
     .then(result => {
-      search(result, req, res, {
+      search(result, query, req, res, {
         emptyRedirect: "/contact/private",
         render: "index",
         status: "private"

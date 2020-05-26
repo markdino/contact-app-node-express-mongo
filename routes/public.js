@@ -19,10 +19,11 @@ router.get("/", (req, res) => {
 
 // Search public contacts
 router.post("/search", urlencodedParser, (req, res) => {
+  const query = req.body.search
   Contact.find({ private: false })
     .select("name avatar")
     .then((result) => {
-      search(result, req, res, {
+      search(result, query, req, res, {
         emptyRedirect: "/",
         render: "index",
         status: "public",
