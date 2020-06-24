@@ -1,8 +1,14 @@
 const router = require("express").Router();
 const passport = require("passport");
+const cors = require("cors");
 const User = require("../../models/user");
 const { payload, filter } = require("../../models/contact");
 const protectedApi = require('../../middleware/protectedApi')
+
+const corsOptions = {
+  origin: "http://localhost:3000",
+  credentials: true
+}
 
 // Current user
 router.get('/me', protectedApi, (req, res) => {
@@ -27,10 +33,10 @@ router.post("/signup", (req, res) => {
 });
 
 // Login
-router.post("/login", (req, res) => {
+router.post("/login", cors(corsOptions), (req, res) => {
   passport.authenticate('local', (err, user, info) => {
     if (!user)
-      return res.status(401).send(payload(info.message, null, info.name));
+      return res.status(400).send(payload(info.message, null, 'Bad request'));
 
     req.logIn(user, err => {
       if (err) return res.status(400).send(payload(err, null, 'Bad request'));
