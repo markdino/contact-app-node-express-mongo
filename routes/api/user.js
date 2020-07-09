@@ -5,11 +5,6 @@ const User = require("../../models/user");
 const { payload, filter } = require("../../models/contact");
 const protectedApi = require('../../middleware/protectedApi')
 
-const corsOptions = {
-  origin: "http://localhost:3000",
-  credentials: true
-}
-
 // Current user
 router.get('/me', protectedApi, (req, res) => {
   res.send(payload(null, filter(req.user, '_id username'), 'Current user'))
@@ -33,7 +28,7 @@ router.post("/signup", (req, res) => {
 });
 
 // Login
-router.post("/login", cors(corsOptions), (req, res) => {
+router.post("/login", (req, res) => {
   passport.authenticate('local', (err, user, info) => {
     if (!user)
       return res.status(400).send(payload(info.message, null, 'Bad request'));
