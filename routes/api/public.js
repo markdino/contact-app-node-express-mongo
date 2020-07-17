@@ -6,7 +6,7 @@ const { search, payload } = Contact;
 router.get("/", (req, res) => {
   Contact.find({ private: false })
     .sort({ name: 1 })
-    .select("name avatar")
+    .select("name avatar owner")
     .then(result => res.send(payload(null, result, 'Contact')))
     .catch(err => {
       res.status(400).send(payload(err.message, null, err.name));
