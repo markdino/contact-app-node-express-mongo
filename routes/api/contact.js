@@ -7,7 +7,7 @@ const { search, payload, filter } = Contact;
 router.get("/", protectedApi, (req, res) => {
   Contact.find({ owner: req.user._id })
     .sort({ name: 1 })
-    .select("name avatar")
+    .select("name avatar owner")
     .then(result => res.send(payload(null, result, 'My contacts')))
     .catch(err => {
       res.status(400).render(payload(err.message, null, err.name));
@@ -18,7 +18,7 @@ router.get("/", protectedApi, (req, res) => {
 router.get("/private", protectedApi, (req, res) => {
   Contact.find({ owner: req.user._id, private: true })
     .sort({ name: 1 })
-    .select("name avatar")
+    .select("name avatar owner")
     .then(result => {
       res.send(payload(null, result, 'private'));
     })
