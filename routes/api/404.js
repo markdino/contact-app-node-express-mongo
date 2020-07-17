@@ -1,10 +1,10 @@
 const router = require("express").Router();
-const { errorAlert } = require("../models/contact");
+const { payload } = require("../../models/contact");
 
 router.get("*", (req, res) => {
   res
     .status(404)
-    .render("error", errorAlert(404, "Not Found", "Page Not Found!"));
+    .send(payload("API Routes Not Found.", null, "Not Found!"));
 });
 
 module.exports = router;

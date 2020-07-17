@@ -1,10 +1,9 @@
 const router = require("express").Router();
-const jsonData = require("../data.json");
-const Contact = require("../models/contact");
 const bodyParser = require("body-parser");
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 const isLoggedIn = require("../middleware/isLoggedIn");
-const { search, errorAlert } = Contact;
+const Contact = require("../models/contact");
+const { search, errorAlert, filter } = Contact;
 
 // My contacts
 router.get("/", isLoggedIn, (req, res) => {
@@ -51,17 +50,16 @@ router.get("/:id/view", (req, res) => {
             .status(403)
             .render("error", errorAlert(403, "Forbidden", "Access denied."));
       }
-
-      result
-        ? res.render("view", { person: result })
-        : res
-            .status(404)
-            .render(
-              "error",
-              errorAlert(404, "Not Found", "Contact not found or invalid id.")
-            );
+      res.render("view", { person: result })
     })
     .catch(err => {
+      if (!err.value)
+        return res
+          .status(404)
+          .render(
+            "error",
+            errorAlert(404, "Not Found", "Contact not found or invalid id.")
+          );
       res
         .status(400)
         .render(
@@ -78,22 +76,21 @@ router.get("/:id/view", (req, res) => {
 // Delete Contact
 router.post("/:id/delete", isLoggedIn, async (req, res) => {
   const result = await Contact.findById(req.params.id);
+  if (!result)
+    return res
+      .status(404)
+      .render(
+        "error",
+        errorAlert(404, "Not Found", "Contact already been deleted.")
+      );
+
   if (result.owner.toString() !== req.user._id.toString())
     return res
       .status(403)
       .render("error", errorAlert(403, "Forbidden", "Access denied."));
 
   Contact.deleteOne({ _id: req.params.id })
-    .then(response => {
-      response.deletedCount > 0
-        ? res.redirect("/contact")
-        : res
-            .status(400)
-            .render(
-              "error",
-              errorAlert(404, "Not Found", "Contact already been deleted.")
-            );
-    })
+    .then(() => res.redirect("/contact"))
     .catch(err => {
       res
         .status(400)
@@ -116,9 +113,15 @@ router.get("/create", isLoggedIn, (req, res) => {
 // Save Contact
 router.post("/save", [urlencodedParser, isLoggedIn], (req, res) => {
   req.body.owner = req.user._id;
-  req.body.private = req.body.private === "on" ? true : false;
+  req.body.private = (req.body.private === "on" || req.body.private === true);
+  let name = req.body.name;
+  req.body.name = name.replace(name[0], name[0].toUpperCase());
 
-  Contact.create(req.body)
+  const newContact = filter(
+    req.body,
+    'owner avatar name mobile tel email address private'
+  );
+  Contact.create(newContact)
     .then(() => res.redirect("/contact"))
     .catch(err => {
       res.status(400).render("error", errorAlert(400, err.name, err.message));
@@ -137,11 +140,11 @@ router.get("/:id/edit", isLoggedIn, (req, res) => {
       result
         ? res.render("update", { person: result })
         : res
-            .status(404)
-            .render(
-              "error",
-              errorAlert(404, "Not Found", "Contact not found.")
-            );
+          .status(404)
+          .render(
+            "error",
+            errorAlert(404, "Not Found", "Contact not found.")
+          );
     })
     .catch(err => {
       res
@@ -160,23 +163,29 @@ router.get("/:id/edit", isLoggedIn, (req, res) => {
 // Update Contact
 router.post("/:id/update", [urlencodedParser, isLoggedIn], async (req, res) => {
   const result = await Contact.findById(req.params.id);
+  if (!result)
+    return res
+      .status(404)
+      .render(
+        "error",
+        errorAlert(404, "Not Found", "Contact doesn't exist anymore.")
+      );
   if (result.owner.toString() !== req.user._id.toString())
     return res
       .status(403)
       .render("error", errorAlert(403, "Forbidden", "Access denied."));
 
-  req.body.private = req.body.private === "on" ? true : false;
-  Contact.updateOne({ _id: req.params.id }, { $set: req.body })
-    .then(response => {
-      response.nModified > 0
-        ? res.redirect("/contact")
-        : res
-            .status(404)
-            .render(
-              "error",
-              errorAlert(404, "Not Found", "Contact doesn't exist anymore.")
-            );
-    })
+  req.body.private = (req.body.private === "on" || req.body.private === true);
+  let name = req.body.name;
+  req.body.name = name.replace(name[0], name[0].toUpperCase());
+
+  const newContact = filter(
+    req.body,
+    'avatar name mobile tel email address private'
+  );
+
+  result.updateOne({ $set: newContact })
+    .then(() => res.redirect("/contact"))
     .catch(err => {
       res
         .status(400)
@@ -193,10 +202,11 @@ router.post("/:id/update", [urlencodedParser, isLoggedIn], async (req, res) => {
 
 // Search Contact
 router.post("/search", [urlencodedParser, isLoggedIn], (req, res) => {
+  const query = req.body.search
   Contact.find({ owner: req.user._id })
     .select("name avatar")
     .then(result => {
-      search(result, req, res, {
+      search(result, query, req, res, {
         emptyRedirect: "/contact",
         render: "index",
         status: "mycontact"
@@ -208,10 +218,11 @@ router.post("/search", [urlencodedParser, isLoggedIn], (req, res) => {
 });
 
 router.post("/private/search", [urlencodedParser, isLoggedIn], (req, res) => {
+  const query = req.body.search
   Contact.find({ owner: req.user._id, private: true })
     .select("name avatar")
     .then(result => {
-      search(result, req, res, {
+      search(result, query, req, res, {
         emptyRedirect: "/contact/private",
         render: "index",
         status: "private"

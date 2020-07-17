@@ -1,13 +1,14 @@
+require("dotenv").config();
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("../models/user");
 
-module.exports = app => {
+module.exports.setup = (app) => {
   app.use(
     require("express-session")({
-      secret: "Contact App temporary secret",
+      secret: process.env.SECRET,
       resave: false,
-      saveUninitialized: false
+      saveUninitialized: false,
     })
   );
 
