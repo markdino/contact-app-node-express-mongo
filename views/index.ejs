@@ -79,6 +79,11 @@
     </section>
     <!-- Contact List -->
     <section class="contacts py-10">
+      <% if (typeof data === 'string'){ %>
+      <p class="text-muted text-center"><%= data %></p>
+      <% } else if (data === null || data.length < 1) { %>
+      <p class="text-muted text-center">Contact is empty</p>
+      <% } else { %>
       <% data.forEach(person=>{ %>
       <section id="contact-list" class="row align-item-center my-10">
         <section class="avatar-circle">
@@ -101,6 +106,7 @@
         </section>
       </section>
       <% }) %>
+      <% } %>
     </section>
     <footer class="text-muted">Developed by: Mark Dino Pelonia</footer>
   </main>
