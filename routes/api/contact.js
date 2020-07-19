@@ -61,9 +61,10 @@ router.get("/:id", (req, res) => {
 
 // Save Contact
 router.post("/", protectedApi, (req, res) => {
+  let hasError = false
+  let errors = {}
+
   const validateInput = () => {
-    let hasError = false
-    const errors = {}
     if (!req.body.name) {
       errors.name = '"Name" is required'
       hasError = true
@@ -74,11 +75,15 @@ router.post("/", protectedApi, (req, res) => {
         errors.email = 'Invalid email'
       hasError = true
     }
-
-    if (hasError)
-      return res.status(400).send(payload(errors, null, 'Input error'));
   }
   validateInput();
+
+  if (hasError)
+    return (
+      res.status(400).send(payload(errors, null, 'Input error')),
+      hasError = false,
+      errors = {}
+    );
 
   req.body.owner = req.user._id;
   let contactName = req.body.name;
